@@ -4,6 +4,9 @@
 #include <iostream>
 #include "player.hpp"
 #include <array>
+#include <algorithm>
+#include <random>
+#include <chrono>
 using namespace std;
 
 Game::Game(Player &player1, Player &player2) : player1(player1), player2(player2)
@@ -37,8 +40,10 @@ void Game::createDeckAndDealCards(Player &player1, Player &player2)
         deck.push_back(Card(i, "spades"));
     }
 
-    // Shuffle deck
-    std::random_shuffle(deck.begin(), deck.end());
+    // random generator from <algorithm> library
+    std::random_device rd;
+    std::mt19937 rng(rd());
+    std::shuffle(deck.begin(), deck.end(), rng);
 
     // Deal cards
     const size_t numCardsPerPlayer = 26;
