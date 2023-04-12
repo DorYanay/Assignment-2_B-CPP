@@ -12,6 +12,8 @@ Game::Game(Player &player1, Player &player2) : player1(player1), player2(player2
     {
         throw std::runtime_error("one of the players are already in game.");
     }
+    this->w1 = 0;
+    this->w2 = 0;
     this->drawscnt = 0;
     this->endturn = true;
     this->takes = 0;
