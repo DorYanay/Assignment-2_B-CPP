@@ -145,12 +145,12 @@ void Game::printLog()
 void Game ::printStats()
 {
     cout << player1.getName() + ": "
-         << "Number of wins: " << +this->w1 << " WINRATE: " << +((float)this->w1 / this->turns) << endl;
+         << "Number of wins: " << +this->w1 << " WINRATE: " << +((float)(this->w1) / (this->turns)) << endl;
     cout << player1.getName() + ": "
          << "Cardstaken: " << +player1.cardesTaken() << endl;
     cout << player2.getName() + ": "
-         << "Number of wins: " << +this->w2 << " WINRATE: " << +((float)this->w2 / this->turns) << endl;
+         << "Number of wins: " << +this->w2 << " WINRATE: " << +((float)(this->w2) / (this->turns)) << endl;
     cout << player2.getName() + ": "
          << "Cardstaken: " << +player2.cardesTaken() << endl;
-    cout << "Number of Draws: " << +this->drawscnt << " DRAWRATE: " << +((float)this->drawscnt / this->turns) << endl;
+    cout << "Number of Draws: " << +this->drawscnt << " DRAWRATE: " << +((float)(this->drawscnt) / (this->turns)) << endl;
 }
