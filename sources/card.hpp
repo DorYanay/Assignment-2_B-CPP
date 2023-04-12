@@ -5,12 +5,12 @@ using namespace std;
 
 class Card
 {
-
-    string type;      // Hearts, Spades, Diamonds or Clubs
-    unsigned int num; // 2 to 14;
+    string print;
+    string type; // Hearts, Spades, Diamonds or Clubs
+    int num;     // 2 to 14;
 
 public:
-    Card(unsigned int num, string type);
+    Card(int num, string type);
     Card();
     int compareTo(Card other);
     string printCard(Card other);
