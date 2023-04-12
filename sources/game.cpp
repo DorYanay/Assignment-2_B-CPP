@@ -57,7 +57,7 @@ void Game::playTurn()
     }
     if (player1.stacksize() == 0 || player2.stacksize() == 0)
     {
-        cout << "there are no cards in players stacks." << endl;
+        throw std::runtime_error("no cards left");
         return;
     }
     if (this->endturn == true)
@@ -144,12 +144,13 @@ void Game::printLog()
 }
 void Game ::printStats()
 {
-    std::cout << player1.getName() + ": ";
-    std::cout << "win rate - " + std::to_string((float)w1 / this->turns) + ", ";
-    std::cout << "cards won - " + std::to_string(player1.cardesTaken()) << std::endl;
-    std::cout << player2.getName() + ": ";
-    std::cout << "win rate - " + std::to_string((float)w2 / this->turns) + ", ";
-    std::cout << "cards won - " + std::to_string(player2.cardesTaken()) << std::endl;
-    std::cout << "draw rate: " + std::to_string((float)drawscnt / this->turns) + ", ";
-    std::cout << "draws amount: " + std::to_string(drawscnt) << std::endl;
+    cout << player1.getName() + ": "
+         << "Number of wins: " << +this->w1 << " WINRATE: " << +((float)this->w1 / this->turns) << endl;
+    cout << player1.getName() + ": "
+         << "Cardstaken: " << +player1.cardesTaken() << endl;
+    cout << player2.getName() + ": "
+         << "Number of wins: " << +this->w2 << " WINRATE: " << +((float)this->w2 / this->turns) << endl;
+    cout << player2.getName() + ": "
+         << "Cardstaken: " << +player2.cardesTaken() << endl;
+    cout << "Number of Draws: " << +this->drawscnt << " DRAWRATE: " << +((float)this->drawscnt / this->turns) << endl;
 }

@@ -53,6 +53,6 @@ string Card::printCard()
     }
     else
     {
-        return "The card is: " + to_string(num) + " of " + type;
+        return " " + to_string(num) + " of " + type;
     }
 }
