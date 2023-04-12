@@ -6,17 +6,10 @@ using namespace std;
 
 Card::Card(int num, string type)
 {
-    this->print = "";
+
     this->num = num;
     this->type = type;
 }
-Card ::Card()
-{
-    this->print = "";
-    this->num = 0;
-    this->type = "";
-}
-
 int Card ::compareTo(Card other)
 {
     if (this->num == 14 && other.num == 2)
@@ -37,39 +30,29 @@ int Card ::compareTo(Card other)
     }
     else
     {
-        return 1;
+        return 0;
     }
 }
-string Card::printCard(Card card)
+string Card::printCard()
 {
-    if (card.num == 11)
+    if (num == 11)
     {
-        this->print = "The card is: Jack of " + card.type;
-        cout << "The card is: "
-             << "Jack of" << card.type << endl;
+        return "The card is: Jack of " + type;
     }
-    else if (card.num == 12)
+    else if (num == 12)
     {
-        this->print = "The card is: Queen of " + card.type;
-        cout << "The card is: "
-             << "Queen of" << card.type << endl;
+        return "The card is: Queen of " + type;
     }
-    else if (card.num == 13)
+    else if (num == 13)
     {
-        this->print = "The card is: King of " + card.type;
-        cout << "The card is: "
-             << "King of" << card.type << endl;
+        return "The card is: King of " + type;
     }
-    else if (card.num == 14)
+    else if (num == 14)
     {
-        this->print = "The card is: Ace of " + card.type;
-        cout << "The card is: "
-             << "Ace of" << card.type << endl;
+        return "The card is: Ace of " + type;
     }
     else
     {
-        this->print = "The card is: " + to_string(card.num) + " of " + card.type;
-        cout << "The card is: " << card.num << "And type: " << card.type << endl;
+        return "The card is: " + to_string(num) + " of " + type;
     }
-    return this->print;
 }

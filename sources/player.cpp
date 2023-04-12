@@ -5,27 +5,18 @@ Player ::Player(string name)
 {
     cardstaken = 0;
     this->name = name;
-    this->stack = 0;
     state = false;
-};
-
-Player ::Player()
-{
-    cardstaken = 0;
-    this->name = "Anonymous";
-    this->stack = 0;
-    state = false;
-};
+}
 
 int Player ::stacksize()
 {
     return this->deck.size();
-};
+}
 
 int Player ::cardesTaken()
 {
     return cardstaken;
-};
+}
 Card Player::playCard()
 {
     Card topCard = deck.front();
@@ -44,9 +35,9 @@ void Player::takeCards(int turntake)
 {
     cardstaken = cardstaken + turntake;
 }
-void Player::addCard(Card card)
+void Player::setDeck(std::vector<Card> &deck)
 {
-    deck.push_back(card);
+    this->deck = deck;
 }
 bool Player::getCurrentState()
 {
@@ -55,28 +46,4 @@ bool Player::getCurrentState()
 void Player::setState(bool playingstate)
 {
     state = playingstate;
-}
-int Player::getWins()
-{
-    return wins;
-}
-int Player::getLoses()
-{
-    return loses;
-}
-int Player::getDraws()
-{
-    return draws;
-}
-void Player::addWin()
-{
-    wins++;
-}
-void Player::addLose()
-{
-    loses++;
-}
-void Player::addDraw()
-{
-    draws++;
 }

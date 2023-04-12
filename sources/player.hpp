@@ -10,19 +10,17 @@ class Player
     int loses;
     int draws;
     std::string name;
-    int stack;
     int cardstaken;
     bool state;
     std::vector<Card> deck;
 
 public:
     Player(std::string name);
-    Player();
     int stacksize();
     int cardesTaken();
     Card playCard();
     void addturnedCard();
-    void addCard(Card card);
+    void setDeck(std::vector<Card> &deck);
     std::string getName() const;
     void takeCards(int);
     bool getCurrentState();
@@ -30,7 +28,4 @@ public:
     int getWins();
     int getDraws();
     int getLoses();
-    void addWin();
-    void addDraw();
-    void addLose();
 };

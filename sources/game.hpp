@@ -7,15 +7,16 @@
 
 class Game
 {
-    int drawscnt;
+    size_t drawscnt;
     bool endturn;
     string str;
     int takes;
     Player &player1;
     Player &player2;
-    Card *deck;
-    int turns;
+    size_t turns;
     std::vector<std::string> log;
+    size_t w1;
+    size_t w2;
 
 public:
     Game(Player &player1, Player &player2);
@@ -27,8 +28,7 @@ public:
     void printStats();
 
 private:
-    void shuffleDeck();
-    void dealCards(Player &player1, Player &player2);
+    void createDeckAndDealCards(Player &player1, Player &player2);
 };
 namespace ariel
 {

@@ -1,4 +1,9 @@
 #include "game.hpp"
+#include <vector>
+#include <random>
+#include <iostream>
+#include "player.hpp"
+#include <array>
 using namespace std;
 
 Game::Game(Player &player1, Player &player2) : player1(player1), player2(player2)
@@ -12,119 +17,104 @@ Game::Game(Player &player1, Player &player2) : player1(player1), player2(player2
     this->takes = 0;
     this->str = "";
     this->turns = 0;
-    shuffleDeck();
-    dealCards(player1, player2);
+    createDeckAndDealCards(player1, player2);
     player1.setState(true);
     player2.setState(true);
 }
-void Game::shuffleDeck()
+void Game::createDeckAndDealCards(Player &player1, Player &player2)
 {
-    const int numCards = 52;
-    deck = new Card[numCards];
-    int deckIndex = 0;
-    for (int num = 2; num <= 14; num++)
+    // Create deck of cards
+    std::vector<Card> deck;
+    std::vector<Card> deck1;
+    std::vector<Card> deck2;
+    for (int i = 1; i <= 13; i++)
     {
-        deck[deckIndex++] = Card(num, "Hearts");
-        deck[deckIndex++] = Card(num, "Spades");
-        deck[deckIndex++] = Card(num, "Diamonds");
-        deck[deckIndex++] = Card(num, "Clubs");
+        deck.push_back(Card(i, "hearts"));
+        deck.push_back(Card(i, "diamonds"));
+        deck.push_back(Card(i, "clubs"));
+        deck.push_back(Card(i, "spades"));
     }
 
-    for (int i = 0; i < numCards; i++)
+    // Shuffle deck
+    std::random_shuffle(deck.begin(), deck.end());
+
+    // Deal cards
+    const size_t numCardsPerPlayer = 26;
+    for (size_t i = 0; i < numCardsPerPlayer; i++)
     {
-        int randomIndex = rand() % numCards;
-        Card temp = deck[i];
-        deck[i] = deck[randomIndex];
-        deck[randomIndex] = temp;
+        deck1.push_back(deck[i]);
+        deck2.push_back(deck[i + numCardsPerPlayer]);
     }
-}
-void Game::dealCards(Player &player1, Player &player2)
-{
-    const int numCardsPerPlayer = 26;
-    for (int i = 0; i < numCardsPerPlayer; i++)
-    {
-        player1.addCard(deck[i]);
-        player2.addCard(deck[i + numCardsPerPlayer]);
-    }
+    player1.setDeck(deck1);
+    player2.setDeck(deck2);
 }
 void Game::playTurn()
 {
     if (&player1 == &player2)
     {
         throw std::invalid_argument("illegal, player can`t play against himself.");
+        return;
     }
     if (player1.stacksize() == 0 || player2.stacksize() == 0)
     {
         cout << "there are no cards in players stacks." << endl;
+        return;
     }
     if (this->endturn == true)
     {
         this->str = "";
     }
-    this->turns = this->turns + 1;
+    this->turns++;
     Card player1Card = player1.playCard();
     Card player2Card = player2.playCard();
-    cout << "Turn " << turns << ": " << player1.getName() << "played: " << player1Card.printCard(player1Card) << ", " << player2.getName() << " played : " << player2Card.printCard(player1Card) << endl;
-    this->str += player1.getName() + " played: " + player1Card.printCard(player1Card) + ", " + player2.getName() + " played: " + player2Card.printCard(player2Card) + ", ";
+    this->str = player1.getName() + " played: " + player1Card.printCard() + ", " + player2.getName() + " played: " + player2Card.printCard() + ", ";
     this->takes = this->takes + 2;
     int compareResult = player1Card.compareTo(player2Card);
     if (compareResult == 1)
     {
-        std::cout << player1.getName() << " Has won the turn" << std::endl;
         player1.takeCards(this->takes);
         this->str += player1.getName() + " Wins";
+        this->takes = 0;
         log.push_back(this->str);
-        player1.addWin();
-        player2.addLose();
+        this->w1++;
         this->endturn = true;
     }
     else if (compareResult == -1)
     {
-        std::cout << player2.getName() << " Has won the turn" << std::endl;
         player2.takeCards(this->takes);
+        this->takes = 0;
         this->str += player2.getName() + " Wins";
         log.push_back(this->str);
-        player1.addLose();
-        player2.addWin();
+        this->w2++;
         this->endturn = true;
     }
     else
     {
-        std::cout << "DRAW" << std::endl;
         this->drawscnt = this->drawscnt + 1;
-        if (player1.stacksize() == 1 || player2.stacksize() == 1)
+        if (player1.stacksize() == 0 || player2.stacksize() == 0)
         {
-            player1.takeCards((this->takes / 2) + 1);
-            player2.takeCards((this->takes / 2) + 1);
-            player1.setState(false);
-            player2.setState(false);
-            player1.addDraw();
-            player2.addDraw();
+            player1.takeCards((this->takes) / 2);
+            player2.takeCards((this->takes) / 2);
+            this->takes = 0;
             this->str += " Draw";
             log.push_back(this->str);
             return;
         }
-        else if (player1.stacksize() == 0 || player2.stacksize() == 0)
+        player1.addturnedCard();
+        player2.addturnedCard();
+        this->takes = this->takes + 2;
+        str += " Draw";
+        log.push_back(str);
+        if (player1.stacksize() == 0 || player2.stacksize() == 0)
         {
-            player1.takeCards((this->takes / 2));
-            player2.takeCards((this->takes / 2));
-            player1.addDraw();
-            player2.addDraw();
-            this->str += " Draw";
-            log.push_back(this->str);
+            player1.takeCards((this->takes) / 2);
+            player2.takeCards((this->takes) / 2);
+            return;
         }
-        else
-        {
-            player1.addDraw();
-            player2.addDraw();
-            player1.addturnedCard();
-            player2.addturnedCard();
-            str += " Draw";
-            log.push_back(str);
-            playTurn();
-        }
+        this->endturn = false;
+        playTurn();
     }
-}
+};
 void Game::printLastTurn()
 {
     cout << log.back() << endl;
@@ -154,13 +144,12 @@ void Game::printLog()
 }
 void Game ::printStats()
 {
-    cout << player1.getName() << "won : " << player1.getWins() << " WINRATE: " << (float)((player1.getWins()) / (this->turns)) << endl;
-    cout << player1.getName() << "lost : " << player1.getLoses() << " WINRATE: " << (float)((player1.getLoses()) / (this->turns)) << endl;
-    cout << player1.getName() << "cards won : " << player1.cardesTaken() << endl;
-
-    cout << player2.getName() << "won : " << player2.getWins() << " WINRATE: " << (float)((player2.getWins()) / (this->turns)) << endl;
-    cout << player2.getName() << "lost : " << player2.getLoses() << " WINRATE: " << (float)((player2.getLoses()) / (this->turns)) << endl;
-    cout << player2.getName() << "cards won : " << player2.cardesTaken() << endl;
-
-    cout << player1.getName() << "and" << player2.getName() << " drawed: " << this->drawscnt << "DRAWRATE: " << (float)((this->drawscnt) / (this->turns)) << endl;
+    std::cout << player1.getName() + ": ";
+    std::cout << "win rate - " + std::to_string((float)w1 / this->turns) + ", ";
+    std::cout << "cards won - " + std::to_string(player1.cardesTaken()) << std::endl;
+    std::cout << player2.getName() + ": ";
+    std::cout << "win rate - " + std::to_string((float)w2 / this->turns) + ", ";
+    std::cout << "cards won - " + std::to_string(player2.cardesTaken()) << std::endl;
+    std::cout << "draw rate: " + std::to_string((float)drawscnt / this->turns) + ", ";
+    std::cout << "draws amount: " + std::to_string(drawscnt) << std::endl;
 }
